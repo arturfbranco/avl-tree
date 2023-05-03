@@ -1,8 +1,24 @@
+import java.util.Scanner;
+
 public class Main {
 
     public static Tree tree;
 
     public static void main(String[] args) {
+        Cli cli = new Cli();
+        boolean shouldContinue = true;
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Árvore Binária de Busca - AVL");
+        while (shouldContinue){
+            System.out.println("\nEscolha uma das opções abaixo. Digite qualquer outra para finalizar.");
+            System.out.println("i = Inserir; b = Buscar; r = Remover;");
+            System.out.println("print = Imprimir em PRE_ORDER, IN_ORDER, POST_ORDER, ALL, STATE");
+            String command = scanner.nextLine();
+            shouldContinue = cli.command(command);
+        }
+    }
+
+    public static void tests(){
         reset();
 
         addAndPrint(10);
@@ -106,16 +122,11 @@ public class Main {
 
         addAndPrint(57);
 
-         addAndPrint(43);
+        addAndPrint(43);
 
-         addAndPrint(44);
+        addAndPrint(44);
         tree.remove(50);
         tree.printTreeState();
-
-
-
-
-
     }
 
     public static void reset(){
