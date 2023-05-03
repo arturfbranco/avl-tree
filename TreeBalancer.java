@@ -11,7 +11,7 @@ public class TreeBalancer {
             logger.log("Node with key " + targetNode.getKey() + " has a balance factor of " + balanceFactor + ". Proceeding with rotations...");
             if(balanceFactor > 1){
                 int leftSubtreeBalanceFactor = this.calculateBalanceFactor(targetNode.getLeft());
-                if(leftSubtreeBalanceFactor > 0){
+                if(leftSubtreeBalanceFactor >= 0){
                     logger.log("Proceeding with right rotation...");
                     newRoot = this.performRightRotation(parent, targetNode);
                 } else {

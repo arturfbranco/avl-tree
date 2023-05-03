@@ -253,7 +253,10 @@ public class Tree {
             logger.log("Starting process of copying left subtree far right node...");
             Node leftSubTreeNode = targetNode.getLeft();
             int newKey = this.processCopyingOfFarRightNode(leftSubTreeNode);
+            leftSubTreeNode.updateHeight();
+            this.treeBalancer.balance(targetNode, leftSubTreeNode);
             targetNode.setKey(newKey);
+
         }
     }
 
@@ -265,7 +268,10 @@ public class Tree {
             this.processRemoval(parent, ChildSide.RIGHT);
             return newKey;
         }
-        return this.processCopyingOfFarRightNode(targetNode);
+        int key = this.processCopyingOfFarRightNode(targetNode);
+        targetNode.updateHeight();
+        this.treeBalancer.balance(parent, targetNode);
+        return key;
     }
 
     private void oneChildNodeRemoval(Node parent, ChildSide childSide){

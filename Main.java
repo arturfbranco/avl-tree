@@ -106,6 +106,12 @@ public class Main {
 
         addAndPrint(57);
 
+         addAndPrint(43);
+
+         addAndPrint(44);
+        tree.remove(50);
+        tree.printTreeState();
+
 
 
 
