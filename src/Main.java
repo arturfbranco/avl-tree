@@ -1,3 +1,10 @@
+package src;
+
+import src.Tree.Tree;
+
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class Main {
@@ -5,17 +12,10 @@ public class Main {
     public static Tree tree;
 
     public static void main(String[] args) {
-        Cli cli = new Cli();
-        boolean shouldContinue = true;
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Árvore Binária de Busca - AVL");
-        while (shouldContinue){
-            System.out.println("\nEscolha uma das opções abaixo. Digite qualquer outra para finalizar.");
-            System.out.println("i = Inserir; b = Buscar; r = Remover;");
-            System.out.println("print = Imprimir em PRE_ORDER, IN_ORDER, POST_ORDER, ALL, STATE");
-            String command = scanner.nextLine();
-            shouldContinue = cli.command(command);
-        }
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate localDate = LocalDate.parse("12/05/1980", dateFormatter);
+        Person person = new Person("202.111.222-55", "1111243333", "Joao Silva", localDate, "Porto Alegre");
+
     }
 
     public static void tests(){

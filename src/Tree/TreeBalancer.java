@@ -1,3 +1,7 @@
+package src.Tree;
+
+import src.Logger;
+
 public class TreeBalancer {
     private final Logger logger;
 

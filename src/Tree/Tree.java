@@ -1,3 +1,11 @@
+package src.Tree;
+
+import src.Key.Key;
+import src.Logger;
+import src.Person;
+
+import java.util.List;
+
 public class Tree {
     private Node root;
     private final TreeBalancer treeBalancer;
@@ -21,43 +29,42 @@ public class Tree {
         }
     }
 
-    public void insert(int key){
+    public Node insert(Key key){
         logger.log("Starting insertion process for key: " + key);
-         this.insert(null, this.root, key);
+         return this.insert(null, this.root, key);
     }
-    private boolean insert(Node parent, Node root, int key){
-        boolean isSuccessful;
+    private Node insert(Node parent, Node root, Key key){
+        Node savedNode = null;
         if(this.root == null){
             logger.log("Tree root is null. Inserting " + key + " as root.");
             this.root = new Node(key);
-            isSuccessful = true;
-        } else if(root.getKey() == key){
+            savedNode = this.root;
+        } else if(root.getKey().equal(key)){
             logger.log("Key already exists in the tree. Aborting operation.");
-            isSuccessful = false;
         } else {
             logger.log("Comparing new key " + key + " with node key " + root.getKey() + ".");
-            if(key < root.getKey()){
+            if(key.lesserThan(root.getKey())){
                 if(root.getLeft() == null){
                     logger.log("Left node is null. Inserting " + key + ".");
                     Node newNode = new Node(key);
                     root.setLeft(newNode);
-                    isSuccessful = true;
+                    savedNode = newNode;
                 } else{
                     logger.log("Left node is not null. Visiting left child...");
-                    isSuccessful = this.insert(root, root.getLeft(), key);
+                    savedNode = this.insert(root, root.getLeft(), key);
                 }
             } else {
                 if(root.getRight() == null){
                     logger.log("Right node is null. Inserting " + key + ".");
                     Node newNode = new Node(key);
                     root.setRight(newNode);
-                    isSuccessful = true;
+                    savedNode = newNode;
                 } else {
                     logger.log("Right node is not null. Visiting right child...");
-                    isSuccessful = this.insert(root, root.getRight(), key);
+                    savedNode = this.insert(root, root.getRight(), key);
                 }
             }
-            if(isSuccessful){
+            if(savedNode != null){
                 root.updateHeight();
                 Node newRoot = treeBalancer.balance(parent, root);
                 if(parent == null && newRoot != null){
@@ -66,22 +73,22 @@ public class Tree {
             }
 
         }
-        return isSuccessful;
+        return savedNode;
     }
-    public int find(int key){
+    public Node find(Key key){
         logger.log("Looking for node with key " + key + ".");
         return this.find(this.root, key);
     }
-    private int find (Node root, int key){
+    private Node find (Node root, Key key){
         if(root == null){
             System.out.println("Key not found. Returning -1 instead.");
-            return -1;
-        } else if(key == root.getKey()){
+            return null;
+        } else if(key.equal(root.getKey())){
             System.out.println("Key found: " + root.getKey() + ".");
-            return root.getKey();
+            return root;
         } else {
             logger.log("Comparing " + key + " with node key " + root.getKey() + ".");
-            if(key < root.getKey()){
+            if(key.lesserThan(root.getKey())){
                 logger.log("Visiting node left child.");
                 return this.find(root.getLeft(), key);
             } else {
@@ -143,11 +150,11 @@ public class Tree {
         }
     }
 
-    public void remove(int key){
+    public void remove(Key key){
         logger.log("Starting removal process of node with key " + key + ".");
         this.remove(this.root, key);
     }
-    private boolean remove(Node root, int key){
+    private boolean remove(Node root, Key key){
         boolean isSuccessful;
         if(root == null){
             System.out.println("Key not found.");
@@ -160,7 +167,7 @@ public class Tree {
             Node parent = root;
             Node currentNode;
             ChildSide childSide;
-            if(key < parent.getKey()){
+            if(key.lesserThan(parent.getKey())){
                 childSide = ChildSide.LEFT;
                 currentNode = parent.getLeft();
             } else {
@@ -172,7 +179,7 @@ public class Tree {
                 isSuccessful = false;
             } else {
                 logger.log("Comparing key " + key + " with key node " + currentNode.getKey() + ".");
-                if(key == currentNode.getKey()){
+                if(key.equal(currentNode.getKey())){
                     logger.log("Key found. Starting removal of node...");
                     this.processRemoval(parent, childSide);
                     isSuccessful = true;
@@ -241,34 +248,39 @@ public class Tree {
         Node leftSubTreeRoot = targetNode.getLeft();
         if(leftSubTreeRoot.getLeft() == null && leftSubTreeRoot.getRight() == null){
             logger.log("Left subtree has only one node. Copying key to target node and removing it.");
-            int newNodeKey = leftSubTreeRoot.getKey();
+            Key newNodeKey = leftSubTreeRoot.getKey();
+            List<Person> values = leftSubTreeRoot.getValues();
             this.leafNodeRemoval(targetNode, ChildSide.LEFT);
             targetNode.setKey(newNodeKey);
+            targetNode.setValues(values);
         } else if(leftSubTreeRoot.getRight() == null) {
             logger.log("Left subtree root is far right node. Copying it to target node and removing it.");
-            int newNodekey = leftSubTreeRoot.getKey();
+            Key newNodekey = leftSubTreeRoot.getKey();
+            List<Person> values = leftSubTreeRoot.getValues();
             this.oneChildNodeRemoval(targetNode, ChildSide.LEFT);
             targetNode.setKey(newNodekey);
+            targetNode.setValues(values);
         } else {
             logger.log("Starting process of copying left subtree far right node...");
             Node leftSubTreeNode = targetNode.getLeft();
-            int newKey = this.processCopyingOfFarRightNode(leftSubTreeNode);
+            Key newKey = this.processCopyingOfFarRightNode(leftSubTreeNode);
+            List<Person> values = leftSubTreeRoot.getValues();
             leftSubTreeNode.updateHeight();
             this.treeBalancer.balance(targetNode, leftSubTreeNode);
             targetNode.setKey(newKey);
-
+            targetNode.setValues(values);
         }
     }
 
-    private int processCopyingOfFarRightNode(Node parent){
+    private Key processCopyingOfFarRightNode(Node parent){
         Node targetNode = parent.getRight();
         if(targetNode.getRight() == null){
             logger.log("Far right node found: " + targetNode.getKey() + ". Copying it to target node.");
-            int newKey = targetNode.getKey();
+            Key newKey = targetNode.getKey();
             this.processRemoval(parent, ChildSide.RIGHT);
             return newKey;
         }
-        int key = this.processCopyingOfFarRightNode(targetNode);
+        Key key = this.processCopyingOfFarRightNode(targetNode);
         targetNode.updateHeight();
         this.treeBalancer.balance(parent, targetNode);
         return key;

@@ -1,12 +1,24 @@
+package src.Tree;
+
+import src.Key.Key;
+import src.Logger;
+import src.Person;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Node {
-    private int key;
+    private Key key;
+
+    private List<Person> values;
     private Node left;
     private Node right;
     private int height;
-    private Logger logger;
+    private final Logger logger;
 
-    public Node(int key){
+    public Node(Key key){
         this.key = key;
+        this.values = new ArrayList<>();
         this.left = null;
         this.right = null;
         this.height = 1;
@@ -28,11 +40,11 @@ public class Node {
         this.setHeight(height);
     }
 
-    public int getKey() {
+    public Key getKey() {
         return key;
     }
 
-    public void setKey(int key) {
+    public void setKey(Key key) {
         this.key = key;
     }
 
@@ -58,5 +70,13 @@ public class Node {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public List<Person> getValues() {
+        return values;
+    }
+
+    public void setValues(List<Person> values) {
+        this.values = values;
     }
 }
