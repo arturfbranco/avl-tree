@@ -3,20 +3,26 @@ package src.Repository;
 import src.Key.Key;
 import src.Key.LocalDateKey;
 import src.Key.StringKey;
+import src.Logger;
 import src.Person;
 import src.Tree.Node;
 import src.Tree.Tree;
+import src.Util;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PersonRepository {
 
     private final Tree cpfTree;
     private final Tree nameTree;
     private final Tree birthDateTree;
+
+    private final Logger logger = new Logger();
 
     public PersonRepository() {
         this.cpfTree = new Tree();
@@ -30,6 +36,31 @@ public class PersonRepository {
         this.birthDateTree.printTreeState();
     }
 
+
+
+    public Person findByCpf(String cpf){
+        String treatedCpf = cpf.replace(".", "").replace("-", "");
+        Node retrievedNode = this.cpfTree.find(new StringKey(treatedCpf));
+        if(retrievedNode != null){
+            Person person = retrievedNode.getValues().get(0);
+            logger.log("Found person for CPF " + cpf + ": " + person.toString());
+            return person;
+        }
+        logger.log("CPF + " + cpf + " not found.");
+        return null;
+    }
+
+    public List<Person> findByBirthDateRange(String start, String finish){
+        LocalDate startDate = Util.buildLocalDate(start);
+        LocalDate finishDate = Util.buildLocalDate(finish);
+        List<Node> nodesFound = this.birthDateTree.findInRange(new LocalDateKey(startDate), new LocalDateKey(finishDate));
+        List<Person> allPersonsFound = new ArrayList<>();
+        for(Node node : nodesFound){
+            allPersonsFound.addAll(node.getValues());
+        }
+        return allPersonsFound;
+    }
+
     public void save(Person person){
         person.setName(person.getName().toUpperCase());
         try {
@@ -38,7 +69,7 @@ public class PersonRepository {
             this.saveByBirthDate(person);
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            logger.log("Error while saving new person. Maybe the person already exists?");
         }
 
     }

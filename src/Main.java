@@ -1,144 +1,57 @@
 package src;
 
+import src.Repository.PersonRepository;
 import src.Tree.Tree;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+
+import static src.Util.buildPerson;
 
 public class Main {
 
     public static Tree tree;
 
     public static void main(String[] args) {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate localDate = LocalDate.parse("12/05/1980", dateFormatter);
-        Person person = new Person("202.111.222-55", "1111243333", "Joao Silva", localDate, "Porto Alegre");
+
+        test();
+
+//        PersonRepository repository = new PersonRepository();
+//        try (BufferedReader b = new BufferedReader(new FileReader(args[0]))) {
+//            String linha;
+//            while ((linha = b.readLine()) != null) {
+//                String[] pessoaSplit = linha.split(";");
+//                Person person = buildPerson(pessoaSplit[0], pessoaSplit[1], pessoaSplit[2], pessoaSplit[3], pessoaSplit[4]);
+//                repository.save(person);
+//            }
+//        }
+//        catch (Exception e) {
+//            e.getStackTrace();
+//        }
+
+
 
     }
 
-    public static void tests(){
-        reset();
 
-        addAndPrint(10);
-        addAndPrint(8);
-        addAndPrint(7);
+    public static void test(){
+        PersonRepository repo = new PersonRepository();
+        repo.save(buildPerson("29384923", "93823984", "Artur", "12/12/1980", "POA"));
+        repo.save(buildPerson("24323432", "93823984", "Pedro", "12/12/1981", "POA"));
+        repo.save(buildPerson("456456", "93823984", "Artur", "12/12/1985", "POA"));
+        repo.save(buildPerson("575684", "93823984", "Joao", "12/12/1990", "POA"));
+        repo.save(buildPerson("2342342", "93823984", "Artur", "12/12/1982", "POA"));
+        repo.save(buildPerson("1231232", "93823984", "Alex", "12/12/1990", "POA"));
+        repo.save(buildPerson("4645747234", "93823984", "Paula", "12/12/1988", "POA"));
+        repo.save(buildPerson("293484923", "93823984", "Paula", "12/02/1983", "POA"));
+        repo.printAllTrees();
 
-        printSeparator();
-        reset();
-
-        addAndPrint(10);
-        addAndPrint(12);
-        addAndPrint(18);
-
-        printSeparator();
-        reset();
-
-        addAndPrint(10);
-        addAndPrint(12);
-        addAndPrint(8);
-        addAndPrint(7);
-        addAndPrint(6);
-
-        printSeparator();
-        reset();
-
-        addAndPrint(10);
-        addAndPrint(8);
-        addAndPrint(12);
-        addAndPrint(13);
-        addAndPrint(14);
-
-        printSeparator();
-        reset();
-
-        addAndPrint(20);
-        addAndPrint(10);
-        addAndPrint(30);
-        addAndPrint(5);
-        addAndPrint(16);
-        addAndPrint(25);
-        addAndPrint(40);
-        addAndPrint(7);
-        addAndPrint(50);
-        addAndPrint(3);
-        addAndPrint(2);
-
-        printSeparator();
-        reset();
-
-        addAndPrint(20);
-        addAndPrint(15);
-        addAndPrint(30);
-        addAndPrint(10);
-        addAndPrint(18);
-        addAndPrint(25);
-        addAndPrint(40);
-        addAndPrint(5);
-        addAndPrint(35);
-        addAndPrint(50);
-        addAndPrint(60);
-
-        printSeparator();
-        reset();
-
-        addAndPrint(20);
-        addAndPrint(15);
-        addAndPrint(18);
-
-        printSeparator();
-        reset();
-
-        addAndPrint(20);
-        addAndPrint(25);
-        addAndPrint(22);
-
-
-        printSeparator();
-        reset();
-
-        addAndPrint(50);
-        addAndPrint(40);
-        addAndPrint(70);
-
-        addAndPrint(30);
-        addAndPrint(41);
-        addAndPrint(60);
-        addAndPrint(80);
-
-        addAndPrint(20);
-        addAndPrint(35);
-        addAndPrint(42);
-        addAndPrint(55);
-        addAndPrint(65);
-        addAndPrint(75);
-        addAndPrint(90);
-
-        addAndPrint(10);
-        addAndPrint(52);
-        addAndPrint(58);
-        addAndPrint(100);
-
-        addAndPrint(57);
-
-        addAndPrint(43);
-
-        addAndPrint(44);
-        tree.remove(50);
-        tree.printTreeState();
-    }
-
-    public static void reset(){
-        tree = new Tree();
-    }
-
-    public static void printSeparator(){
-        System.out.println("-------------------------------------");
-    }
-
-    public static void addAndPrint(int num){
-        tree.insert(num);
-        tree.printTreeState();
+        List<Person> inRange = repo.findByBirthDateRange("01/01/1981", "01/12/1985");
     }
 }

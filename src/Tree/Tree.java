@@ -4,7 +4,10 @@ import src.Key.Key;
 import src.Logger;
 import src.Person;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Tree {
     private Node root;
@@ -75,16 +78,45 @@ public class Tree {
         }
         return savedNode;
     }
+
+    public List<Node> findInRange(Key startKey, Key finishKey){
+        logger.log("Start: " + startKey + " Finish: " + finishKey);
+        List<Node> foundNodes = new ArrayList<>();
+        this.findInRangeRecursive(foundNodes, startKey, finishKey, this.root);
+        return foundNodes;
+    }
+
+    private void findInRangeRecursive(List<Node> foundNodes, Key startKey, Key finishKey, Node root){
+        if(root == null){
+            return;
+        }
+        boolean isStartEqualRoot = startKey.equal(root.getKey());
+        boolean isFinishEqualRoot = finishKey.equal(root.getKey());
+        boolean inRange = startKey.lesserThan(root.getKey()) && finishKey.greaterThan(root.getKey()) || isStartEqualRoot || isFinishEqualRoot;
+        logger.log("Evaluating node: " + root.getKey());
+        if(inRange){
+            logger.log("Value " + root.getKey().toString() + " in in range of given values. Going to both children and adding root to result.");
+            this.findInRangeRecursive(foundNodes, startKey, finishKey, root.getLeft());
+            foundNodes.add(root);
+            this.findInRangeRecursive(foundNodes, startKey, finishKey, root.getRight());
+        } else if(startKey.greaterThan(root.getKey())){
+            logger.log("Value " + root.getKey().toString() + " is lesser than start key. Visiting only right node.");
+            this.findInRangeRecursive(foundNodes, startKey, finishKey, root.getRight());
+        } else if(finishKey.lesserThan(root.getKey())){
+            logger.log("Value " + root.getKey().toString() + " is greater than finish key. Visiting only left node.");
+            this.findInRangeRecursive(foundNodes, startKey, finishKey, root.getLeft());
+        }
+    }
     public Node find(Key key){
         logger.log("Looking for node with key " + key + ".");
         return this.find(this.root, key);
     }
     private Node find (Node root, Key key){
         if(root == null){
-            System.out.println("Key not found. Returning -1 instead.");
+            System.out.println("Key not found. Returning null instead.");
             return null;
         } else if(key.equal(root.getKey())){
-            System.out.println("Key found: " + root.getKey() + ".");
+            logger.log("Key found: " + root.getKey() + ".");
             return root;
         } else {
             logger.log("Comparing " + key + " with node key " + root.getKey() + ".");
@@ -157,7 +189,7 @@ public class Tree {
     private boolean remove(Node root, Key key){
         boolean isSuccessful;
         if(root == null){
-            System.out.println("Key not found.");
+            logger.log("Key not found.");
             isSuccessful = false;
         } else if(root.getKey() == this.root.getKey() && key == root.getKey()){
             logger.log("Node with key " + key + " found in tree root. Starting removal of node...");

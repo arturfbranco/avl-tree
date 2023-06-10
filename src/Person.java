@@ -58,4 +58,15 @@ public class Person {
     public void setBirthCity(String birthCity) {
         this.birthCity = birthCity;
     }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "cpf='" + cpf + '\'' +
+                ", rg='" + rg + '\'' +
+                ", name='" + name + '\'' +
+                ", birth=" + birth +
+                ", birthCity='" + birthCity + '\'' +
+                '}';
+    }
 }
