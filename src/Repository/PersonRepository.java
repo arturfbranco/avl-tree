@@ -24,6 +24,10 @@ public class PersonRepository {
 
     private final Logger logger = new Logger();
 
+    public Tree getCpfTree() {
+        return cpfTree;
+    }
+
     public PersonRepository() {
         this.cpfTree = new Tree();
         this.nameTree = new Tree();
@@ -59,6 +63,16 @@ public class PersonRepository {
             allPersonsFound.addAll(node.getValues());
         }
         return allPersonsFound;
+    }
+
+    public List<Person> findByPrefix(String prefix){
+        String cleanedPrefix = prefix.trim().toUpperCase();
+        List<Node> nodesFound = this.nameTree.findByPrefix(cleanedPrefix);
+        List<Person> peopleFound = new ArrayList<>();
+        for(Node node : nodesFound){
+            peopleFound.addAll(node.getValues());
+        }
+        return peopleFound;
     }
 
     public void save(Person person){

@@ -1,6 +1,7 @@
 package src.Tree;
 
 import src.Key.Key;
+import src.Key.StringKey;
 import src.Logger;
 import src.Person;
 
@@ -107,6 +108,46 @@ public class Tree {
             this.findInRangeRecursive(foundNodes, startKey, finishKey, root.getLeft());
         }
     }
+
+    public List<Node> findByPrefix(String prefix) {
+        if(root.getKey().getClass() != StringKey.class){
+            logger.log("Tree is not indexed by stringKey, returning");
+            return null; // TODO: 13/06/2023 lançar exception talvez
+        }
+        logger.log("Prefix: " + prefix);
+        List<Node> foundNodes = new ArrayList<>();
+        this.findByPrefix(foundNodes, prefix, this.root);
+        return foundNodes;
+    }
+
+    public void findByPrefix(List<Node> foundNodes, String prefix, Node root) {
+        if(root == null) {
+            return;
+        }
+
+        StringKey key = (StringKey) root.getKey();
+        int comparisonValue = key.getNameKey().compareTo(prefix);
+        boolean startsWithPrefix = key.getNameKey().startsWith(prefix);
+
+        logger.log("Evaluating node: " + root.getKey());
+        if(startsWithPrefix && comparisonValue >= 0) {
+            logger.log("Value: " + root.getKey().toString() + " starts with given prefix. Going to both children and adding root to result.");
+            this.findByPrefix(foundNodes, prefix, root.getLeft());
+            foundNodes.add(root);
+            this.findByPrefix(foundNodes, prefix, root.getRight());
+        }
+
+        else if(comparisonValue >= 0) {
+            logger.log("Value: " + root.getKey().toString() + " does not start with given prefix but is greater, going to left children.");
+            this.findByPrefix(foundNodes, prefix, root.getLeft());
+        }
+
+        else {
+            logger.log("Value: " + root.getKey().toString() + " does not start with given prefix and is lesser, going to right children.");
+            this.findByPrefix(foundNodes, prefix, root.getRight());
+        }
+    }
+
     public Node find(Key key){
         logger.log("Looking for node with key " + key + ".");
         return this.find(this.root, key);
