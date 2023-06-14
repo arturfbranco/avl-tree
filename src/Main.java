@@ -295,5 +295,7 @@ public class Main {
         List<Person> inRange2 = repo.findByBirthDateRange("01/01/1981", "01/12/1985");
         System.out.println("Pessoas nascidas entre 1 de janeiro de 81 e 1 de dezembro de 85:");
         inRange2.forEach(person -> System.out.println(person.toString()));
+
+        System.out.println("Buscando CPF 40: " + repo.findByCpf(40));
     }
 }
