@@ -68,16 +68,20 @@ public class Tree {
                     savedNode = this.insert(root, root.getRight(), key);
                 }
             }
-            if(savedNode != null){
-                root.updateHeight();
-                Node newRoot = treeBalancer.balance(parent, root);
-                if(parent == null && newRoot != null){
-                    this.root = newRoot;
-                }
-            }
-
+            this.balanceInsertion(savedNode, parent, root);
         }
         return savedNode;
+    }
+
+    private void balanceInsertion(Node savedNode, Node parent, Node root) {
+        if(savedNode == null) {
+            return;
+        }
+        root.updateHeight();
+        Node newRoot = treeBalancer.balance(parent, root);
+        if(parent == null && newRoot != null){
+            this.root = newRoot;
+        }
     }
 
     public List<Node> findInRange(Key startKey, Key finishKey){

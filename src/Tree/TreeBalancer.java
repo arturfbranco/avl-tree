@@ -41,7 +41,7 @@ public class TreeBalancer {
         targetNode.setLeft(newRoot.getRight());
         newRoot.setRight(targetNode);
         if(parent != null){
-            parent.setLeft(newRoot);
+            this.updateParent(parent, targetNode, newRoot);
         }
         return newRoot;
     }
@@ -51,9 +51,17 @@ public class TreeBalancer {
         targetNode.setRight(newRoot.getLeft());
         newRoot.setLeft(targetNode);
         if(parent != null){
-            parent.setRight(newRoot);
+            this.updateParent(parent, targetNode, newRoot);
         }
         return newRoot;
+    }
+
+    private void updateParent(Node parent, Node currentNode, Node newNode) {
+        if (parent.getLeft().getKey().equal(currentNode.getKey())) {
+            parent.setLeft(newNode);
+        } else if (parent.getRight().getKey().equal(currentNode.getKey())) {
+            parent.setRight(newNode);
+        }
     }
 
     private Node performDoubleRightRotation(Node parent, Node targetNode){
