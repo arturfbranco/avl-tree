@@ -296,6 +296,6 @@ public class Main {
         System.out.println("Pessoas nascidas entre 1 de janeiro de 81 e 1 de dezembro de 85:");
         inRange2.forEach(person -> System.out.println(person.toString()));
 
-        System.out.println("Buscando CPF 40: " + repo.findByCpf(40));
+        System.out.println("Buscando CPF 40: " + repo.findByCpf("40"));
     }
 }
