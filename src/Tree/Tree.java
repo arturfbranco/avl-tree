@@ -79,6 +79,9 @@ public class Tree {
         }
         root.updateHeight();
         Node newRoot = treeBalancer.balance(parent, root);
+        if (newRoot != null) {
+            newRoot.updateSubTreeHeight();
+        }
         if(parent == null && newRoot != null){
             this.root = newRoot;
         }

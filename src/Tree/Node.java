@@ -32,6 +32,16 @@ public class Node {
         return node.getHeight();
     }
 
+    public void updateSubTreeHeight() {
+        if (this.getRight() != null) {
+            this.getRight().updateSubTreeHeight();
+        }
+        if (this.getLeft() != null) {
+            this.getLeft().updateSubTreeHeight();
+        }
+        this.updateHeight();
+    }
+
     public void updateHeight(){
         int leftSubtreeHeight = Node.getNodeHeight(this.getLeft());
         int rightSubtreeHeight = Node.getNodeHeight(this.getRight());
