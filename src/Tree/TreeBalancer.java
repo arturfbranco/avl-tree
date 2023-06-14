@@ -57,9 +57,9 @@ public class TreeBalancer {
     }
 
     private void updateParent(Node parent, Node currentNode, Node newNode) {
-        if (parent.getLeft().getKey().equal(currentNode.getKey())) {
+        if (parent.getLeft() != null && parent.getLeft().getKey().equal(currentNode.getKey())) {
             parent.setLeft(newNode);
-        } else if (parent.getRight().getKey().equal(currentNode.getKey())) {
+        } else if (parent.getRight() != null && parent.getRight().getKey().equal(currentNode.getKey())) {
             parent.setRight(newNode);
         }
     }
