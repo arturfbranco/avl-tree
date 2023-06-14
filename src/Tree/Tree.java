@@ -103,7 +103,7 @@ public class Tree {
         boolean inRange = startKey.lesserThan(root.getKey()) && finishKey.greaterThan(root.getKey()) || isStartEqualRoot || isFinishEqualRoot;
         logger.log("Evaluating node: " + root.getKey());
         if(inRange){
-            logger.log("Value " + root.getKey().toString() + " in in range of given values. Going to both children and adding root to result.");
+            logger.log("Value " + root.getKey().toString() + " is in range of given values. Going to both children and adding root to result.");
             this.findInRangeRecursive(foundNodes, startKey, finishKey, root.getLeft());
             foundNodes.add(root);
             this.findInRangeRecursive(foundNodes, startKey, finishKey, root.getRight());
