@@ -61,12 +61,10 @@ public class Person {
 
     @Override
     public String toString() {
-        return "Person{" +
-                "cpf='" + cpf + '\'' +
-                ", rg='" + rg + '\'' +
-                ", name='" + name + '\'' +
-                ", birth=" + birth +
-                ", birthCity='" + birthCity + '\'' +
-                '}';
+        return name + ":\n" +
+            "- CPF: " + cpf + "\n" +
+            "- RG: " + rg + "\n" +
+            "- Data de nascimento: " + birth.toString() + "\n" +
+            "- Cidade: " + birthCity + "\n";
     }
 }

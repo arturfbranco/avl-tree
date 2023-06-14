@@ -10,6 +10,7 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 import static src.Util.buildPerson;
@@ -19,24 +20,83 @@ public class Main {
     public static Tree tree;
 
     public static void main(String[] args) {
+        boolean shouldContinue = true;
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Digite o caminho do arquivo:");
+        String filename = scanner.nextLine();
+        PersonRepository repository = new PersonRepository();
+        readCsvFile(filename, repository);
 
-        test();
+        while (shouldContinue){
+            System.out.println("\n\nComandos:");
+            System.out.println("C - buscar por CPF");
+            System.out.println("N - buscar por parte de nome");
+            System.out.println("D - buscar por intervalo de data");
 
-//        PersonRepository repository = new PersonRepository();
-//        try (BufferedReader b = new BufferedReader(new FileReader(args[0]))) {
-//            String linha;
-//            while ((linha = b.readLine()) != null) {
-//                String[] pessoaSplit = linha.split(";");
-//                Person person = buildPerson(pessoaSplit[0], pessoaSplit[1], pessoaSplit[2], pessoaSplit[3], pessoaSplit[4]);
-//                repository.save(person);
-//            }
-//        }
-//        catch (Exception e) {
-//            e.getStackTrace();
-//        }
+            String command = scanner.nextLine();
 
+            command = command.toUpperCase();
 
+            List<Person> pessoas = new ArrayList<>();
+            switch (command) {
+                case "C":
+                    System.out.println("Digite o CPF para busca:");
+                    String cpf = scanner.nextLine();
+                    Person personByCpf = repository.findByCpf(cpf);
+                    if (personByCpf != null) {
+                        pessoas.add(personByCpf);
+                    }
+                    break;
+                case "N":
+                    System.out.println("Digite a parte do nome para busca:");
+                    String nome = scanner.nextLine();
+                    List<Person> personsByName = repository.findByPrefix(nome);
+                    if (personsByName != null && !personsByName.isEmpty()) {
+                        pessoas.addAll(personsByName);
+                    }
+                    break;
+                case "D":
+                    System.out.println("Digite a data de início no formato dd/mm/YYYY:");
+                    String dataInicial = scanner.nextLine();
+                    System.out.println("Digite a data final no formato dd/mm/YYYY:");
+                    String dataFinal = scanner.nextLine();
+                    List<Person> personsByDate = repository.findByBirthDateRange(dataInicial, dataFinal);
+                    if (personsByDate != null && !personsByDate.isEmpty()) {
+                        pessoas.addAll(personsByDate);
+                    }
+                    break;
+                default:
+                    shouldContinue = false;
+            }
 
+            if (!pessoas.isEmpty()) {
+                printPeople(pessoas);
+                System.out.println("Digite qualquer coisa para continuar...");
+                scanner.nextLine();
+            }
+            pessoas.clear();
+        }
+    }
+
+    private static void printPeople(List<Person> people) {
+        System.out.println("\n");
+        for (Person person: people) {
+            System.out.println(person.toString());
+        }
+
+    }
+
+    public static void readCsvFile(String filename, PersonRepository repository) {
+        try (BufferedReader b = new BufferedReader(new FileReader(filename))) {
+            String linha;
+            while ((linha = b.readLine()) != null) {
+                String[] pessoaSplit = linha.split(";");
+                Person person = buildPerson(pessoaSplit[0], pessoaSplit[1], pessoaSplit[2], pessoaSplit[3], pessoaSplit[4]);
+                repository.save(person);
+            }
+        } catch (Exception e) {
+            e.getStackTrace();
+        }
     }
 
 
